@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
         if(updateScript.isEmpty() && args.size() == 2)
         {
-            updateScript = args.at(1);
+            updateScript = QUrl::fromLocalFile(args.at(1));
         }
 
         if(updateScript.isEmpty())

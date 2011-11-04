@@ -17,7 +17,8 @@ HEADERS += \
     fetchers/smartfetcher.h
 
 OTHER_FILES += README \
-               INSTALL
+               INSTALL \
+    examples/simple.js
 
 
 exists(.gitignore) {

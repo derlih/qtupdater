@@ -40,7 +40,7 @@ Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QS
     Q_D(Updater);
 
     connect(&d->fetcher, SIGNAL(done(QByteArray)), this, SLOT(onScriptFetchDone(QByteArray)));
-    connect(&d->fetcher, SIGNAL(error(QString)), this, SLOT(scriptFetchError(QString)));
+    connect(&d->fetcher, SIGNAL(error(QString)), this, SIGNAL(scriptFetchError(QString)));
     d->fetcher.fetch();
 }
 
