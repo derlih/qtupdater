@@ -1,17 +1,18 @@
 #if defined(QT_GUI_LIB)
-    #include <QApplication>
+#include <QApplication>
 #else
-    #include <QCoreApplication>
+#include <QCoreApplication>
 #endif
 
 #include <QDir>
 #include <QUrl>
+#include <QScopedPointer>
 
-#include <memory>
+#include "updater.h"
 
 int main(int argc, char **argv)
 {
-    std::auto_ptr<QCoreApplication> app(
+    QScopedPointer<QCoreApplication> app(
             #if defined(QT_GUI_LIB)
                 new QApplication(argc, argv)
             #else
@@ -49,5 +50,13 @@ int main(int argc, char **argv)
         updateScript = args.at(1);
     }
 
-    return app->exec();
+    try
+    {
+        Updater updater(updateScript, appInstallPath, appUserPath, app.data());
+        return app->exec();
+    }
+    catch(...)
+    {
+        return 1;
+    }
 }
