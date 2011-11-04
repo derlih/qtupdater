@@ -13,6 +13,12 @@ public:
     explicit Updater(const QUrl updateScript, const QString appInstallPath, const QString appUserPath, QObject *parent = 0);
     ~Updater();
 
+Q_SIGNALS:
+    void scriptFetchError(QString error);
+
+private Q_SLOTS:
+    void onScriptFetchDone(QByteArray data);
+
 private:
     Q_DISABLE_COPY(Updater)
     Q_DECLARE_PRIVATE(Updater)

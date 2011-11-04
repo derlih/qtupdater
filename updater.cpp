@@ -37,9 +37,19 @@ Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QS
     : QObject(parent)
     , d_ptr(new UpdaterPrivate(this, updateScript, appInstallPath, appUserPath))
 {
+    Q_D(Updater);
+
+    connect(&d->fetcher, SIGNAL(done(QByteArray)), this, SLOT(onScriptFetchDone(QByteArray)));
+    connect(&d->fetcher, SIGNAL(error(QString)), this, SLOT(scriptFetchError(QString)));
+    d->fetcher.fetch();
 }
 
 Updater::~Updater()
 {
     delete d_ptr;
+}
+
+void Updater::onScriptFetchDone(QByteArray data)
+{
+    Q_UNUSED(data);
 }
