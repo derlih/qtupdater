@@ -1,5 +1,6 @@
 #include "updater.h"
 #include "updaterexception.h"
+#include "fetchers/smartfetcher.h"
 
 #include <QLabel>
 
@@ -13,6 +14,7 @@ public:
         , updateScript(updateScript)
         , appInstallPath(appInstallPath)
         , appUserPath(appUserPath)
+        , fetcher(updateScript)
 
     {
         if(updateScript.isEmpty())
@@ -25,6 +27,8 @@ public:
     const QUrl updateScript;
     const QString appInstallPath;
     const QString appUserPath;
+
+    SmartFetcher fetcher;
 };
 
 //===========================================================================//
