@@ -8,6 +8,7 @@
 #include <QUrl>
 #include <QScopedPointer>
 #include <QNetworkProxy>
+#include <QDebug>
 
 #include "updater.h"
 #include "updaterexception.h"
@@ -20,53 +21,58 @@ static void setupProxy();
 
 int main(int argc, char **argv)
 {
-    QScopedPointer<QCoreApplication> app(
-            #if defined(QT_GUI_LIB)
-                new QApplication(argc, argv)
-            #else
-                new QCoreApplication(argc, argv)
-            #endif
-                );
-
-    QString appInstallPath = QCoreApplication::applicationDirPath();
-    QString appUserPath;
-    QUrl updateScript;
-
-    const QStringList args = QCoreApplication::arguments();
-    Q_FOREACH(QString arg, args)
-    {
-        static const QString kAppInstallPathArg = "--app-install-path=";
-        static const QString kAppUserPathArg = "--app-user-path=";
-        static const QString kUpdateScriptArg = "--update-script=";
-
-        if(arg.startsWith(kAppInstallPathArg))
-        {
-            appInstallPath = arg.remove(kAppInstallPathArg).simplified();
-        }
-        else if(arg.startsWith(kAppUserPathArg))
-        {
-            appUserPath = arg.remove(kAppUserPathArg).simplified();
-        }
-        else if(arg.startsWith(kUpdateScriptArg))
-        {
-            updateScript = arg.remove(kUpdateScriptArg).simplified();
-        }
-    }
-
-    if(updateScript.isEmpty() && args.size() == 2)
-    {
-        updateScript = args.at(1);
-    }
-
     try
     {
-        setupProxy();
+        QScopedPointer<QCoreApplication> app(
+            #if defined(QT_GUI_LIB)
+                    new QApplication(argc, argv)
+            #else
+                    new QCoreApplication(argc, argv)
+            #endif
+                    );
 
+        QString appInstallPath = QCoreApplication::applicationDirPath();
+        QString appUserPath;
+        QUrl updateScript;
+
+        const QStringList args = QCoreApplication::arguments();
+        Q_FOREACH(QString arg, args)
+        {
+            static const QString kAppInstallPathArg = "--app-install-path=";
+            static const QString kAppUserPathArg = "--app-user-path=";
+            static const QString kUpdateScriptArg = "--update-script=";
+
+            if(arg.startsWith(kAppInstallPathArg))
+            {
+                appInstallPath = arg.remove(kAppInstallPathArg).simplified();
+            }
+            else if(arg.startsWith(kAppUserPathArg))
+            {
+                appUserPath = arg.remove(kAppUserPathArg).simplified();
+            }
+            else if(arg.startsWith(kUpdateScriptArg))
+            {
+                updateScript = arg.remove(kUpdateScriptArg).simplified();
+            }
+        }
+
+        if(updateScript.isEmpty() && args.size() == 2)
+        {
+            updateScript = args.at(1);
+        }
+
+        if(updateScript.isEmpty())
+        {
+            throw InvalidArgException("Update script path is not set");
+        }
+
+        setupProxy();
         Updater updater(updateScript, appInstallPath, appUserPath, app.data());
         return app->exec();
     }
-    catch(...)
+    catch(std::exception &e)
     {
+        qFatal("Inializing error: %s", e.what());
         return 1;
     }
 }
@@ -94,11 +100,17 @@ void setupProxy()
         {
             const QString proxyTypeStr = arg.remove(kProxyTypeArg).simplified();
             if(proxyTypeStr == "socks5")
+            {
                 proxyType = QNetworkProxy::Socks5Proxy;
+            }
             else if(proxyTypeStr == "http")
+            {
                 proxyType = QNetworkProxy::HttpProxy;
+            }
             else
+            {
                 throw InvalidArgException("Invalid '" + kProxyTypeArg + "' parameter");
+            }
         }
         else if(arg.startsWith(kProxyHostArg))
         {
@@ -109,10 +121,14 @@ void setupProxy()
             bool ok;
             proxyPort = arg.remove(kProxyPortArg).simplified().toUShort(&ok);
             if(!ok)
+            {
                 throw InvalidArgException("Invalid '" + kProxyPortArg + "' parameter");
+            }
 
             if(proxyPort == 0)
+            {
                 throw InvalidArgException("Proxy port is set to 0");
+            }
         }
         else if(arg.startsWith(kProxyUserArg))
         {
@@ -125,10 +141,14 @@ void setupProxy()
     }
 
     if(proxyHost.isEmpty())
+    {
         return;
+    }
 
     if(proxyUser.isEmpty() != proxyPassword.isEmpty()) // Logical XOR :-)
+    {
         throw InvalidArgException("Invalid proxy authorization parameters");
+    }
 
     QNetworkProxy proxy(proxyType, proxyHost, proxyPort, proxyUser, proxyPassword);
     QNetworkProxy::setApplicationProxy(proxy);
