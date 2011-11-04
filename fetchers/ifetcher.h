@@ -7,6 +7,7 @@ class IFetcher : public QObject
 {
     Q_OBJECT
 public:
+    IFetcher(QObject *parent = 0) : QObject(parent) {}
     virtual ~IFetcher() {}
 
     virtual void fetch() = 0;
