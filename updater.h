@@ -11,6 +11,7 @@ class Updater : public QObject
     Q_OBJECT
 public:
     explicit Updater(const QUrl updateScript, const QString appInstallPath, const QString appUserPath, QObject *parent = 0);
+    ~Updater();
 
 private:
     Q_DISABLE_COPY(Updater)

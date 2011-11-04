@@ -37,3 +37,8 @@ Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QS
     , d_ptr(new UpdaterPrivate(this, updateScript, appInstallPath, appUserPath))
 {
 }
+
+Updater::~Updater()
+{
+    delete d_ptr;
+}
