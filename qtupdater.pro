@@ -11,4 +11,5 @@ OTHER_FILES += README \
                INSTALL
 
 HEADERS += \
-    updater.h
+    updater.h \
+    fetchers/ifetcher.h
