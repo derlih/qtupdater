@@ -1,14 +1,9 @@
 #include "updater.h"
+#include "updaterexception.h"
 
 #include <QLabel>
 
-#include <stdexcept>
-
-class UpdaterException : public std::runtime_error
-{
-public:
-    explicit UpdaterException(const QString what) : std::runtime_error(what.toStdString()) {}
-};
+//===========================================================================//
 
 class UpdaterPrivate
 {
@@ -31,6 +26,8 @@ public:
     const QString appInstallPath;
     const QString appUserPath;
 };
+
+//===========================================================================//
 
 Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QString appUserPath, QObject *parent)
     : QObject(parent)

@@ -14,4 +14,5 @@ OTHER_FILES += README \
 HEADERS += \
     updater.h \
     fetchers/ifetcher.h \
-    fetchers/filefetcher.h
+    fetchers/filefetcher.h \
+    updaterexception.h
