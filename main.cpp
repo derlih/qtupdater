@@ -5,6 +5,7 @@
 #endif
 
 #include <QDir>
+#include <QUrl>
 
 #include <memory>
 
@@ -20,23 +21,33 @@ int main(int argc, char **argv)
 
     QString appInstallPath = QCoreApplication::applicationDirPath();
     QString appUserPath;
+    QUrl updateScript;
 
     const QStringList args = QCoreApplication::arguments();
     Q_FOREACH(QString arg, args)
     {
-        static const QString kAppInstallPathArg = "--app-install-path";
-        static const QString kAppUserPathArg = "--app-user-path";
+        static const QString kAppInstallPathArg = "--app-install-path=";
+        static const QString kAppUserPathArg = "--app-user-path=";
+        static const QString kUpdateScriptArg = "--update-script=";
 
         if(arg.startsWith(kAppInstallPathArg))
         {
             appInstallPath = arg.remove(kAppInstallPathArg).simplified();
         }
-        else if(arg.startsWith("--app-user-path"))
+        else if(arg.startsWith(kAppUserPathArg))
         {
             appUserPath = arg.remove(kAppUserPathArg).simplified();
         }
+        else if(arg.startsWith(kUpdateScriptArg))
+        {
+            updateScript = arg.remove(kUpdateScriptArg).simplified();
+        }
     }
 
+    if(updateScript.isEmpty() && args.size() == 2)
+    {
+        updateScript = args.at(1);
+    }
 
     return app->exec();
 }
