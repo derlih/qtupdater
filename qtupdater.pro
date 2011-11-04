@@ -17,5 +17,9 @@ HEADERS += \
     fetchers/smartfetcher.h
 
 OTHER_FILES += README \
-               INSTALL \
-               .gitignore
+               INSTALL
+
+
+exists(.gitignore) {
+    OTHER_FILES += .gitignore
+}
