@@ -5,10 +5,16 @@ QT = core network
 CONFIG(debug):QT += gui
 
 SOURCES += main.cpp \
-    updater.cpp
+    updater.cpp \
+    fetchers/filefetcher.cpp \
+    fetchers/smartfetcher.cpp
 
 OTHER_FILES += README \
                INSTALL
 
 HEADERS += \
-    updater.h
+    updater.h \
+    fetchers/ifetcher.h \
+    fetchers/filefetcher.h \
+    updaterexception.h \
+    fetchers/smartfetcher.h

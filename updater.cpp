@@ -1,14 +1,10 @@
 #include "updater.h"
+#include "updaterexception.h"
+#include "fetchers/smartfetcher.h"
 
 #include <QLabel>
 
-#include <stdexcept>
-
-class UpdaterException : public std::runtime_error
-{
-public:
-    explicit UpdaterException(const QString what) : std::runtime_error(what.toStdString()) {}
-};
+//===========================================================================//
 
 class UpdaterPrivate
 {
@@ -18,6 +14,7 @@ public:
         , updateScript(updateScript)
         , appInstallPath(appInstallPath)
         , appUserPath(appUserPath)
+        , fetcher(updateScript)
 
     {
         if(updateScript.isEmpty())
@@ -30,15 +27,29 @@ public:
     const QUrl updateScript;
     const QString appInstallPath;
     const QString appUserPath;
+
+    SmartFetcher fetcher;
 };
+
+//===========================================================================//
 
 Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QString appUserPath, QObject *parent)
     : QObject(parent)
     , d_ptr(new UpdaterPrivate(this, updateScript, appInstallPath, appUserPath))
 {
+    Q_D(Updater);
+
+    connect(&d->fetcher, SIGNAL(done(QByteArray)), this, SLOT(onScriptFetchDone(QByteArray)));
+    connect(&d->fetcher, SIGNAL(error(QString)), this, SLOT(scriptFetchError(QString)));
+    d->fetcher.fetch();
 }
 
 Updater::~Updater()
 {
     delete d_ptr;
+}
+
+void Updater::onScriptFetchDone(QByteArray data)
+{
+    Q_UNUSED(data);
 }

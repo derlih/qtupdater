@@ -10,6 +10,8 @@
 
 #include "updater.h"
 
+//===========================================================================//
+
 int main(int argc, char **argv)
 {
     QScopedPointer<QCoreApplication> app(
