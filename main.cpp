@@ -4,6 +4,8 @@
     #include <QCoreApplication>
 #endif
 
+#include <QDir>
+
 #include <memory>
 
 int main(int argc, char **argv)
@@ -16,7 +18,24 @@ int main(int argc, char **argv)
             #endif
                 );
 
+    QString appInstallPath = QCoreApplication::applicationDirPath();
+    QString appUserPath;
 
+    const QStringList args = QCoreApplication::arguments();
+    Q_FOREACH(QString arg, args)
+    {
+        static const QString kAppInstallPathArg = "--app-install-path";
+        static const QString kAppUserPathArg = "--app-user-path";
+
+        if(arg.startsWith(kAppInstallPathArg))
+        {
+            appInstallPath = arg.remove(kAppInstallPathArg).simplified();
+        }
+        else if(arg.startsWith("--app-user-path"))
+        {
+            appUserPath = arg.remove(kAppUserPathArg).simplified();
+        }
+    }
 
 
     return app->exec();
