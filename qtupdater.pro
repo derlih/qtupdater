@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     fetchers/smartfetcher.cpp
 
 OTHER_FILES += README \
-               INSTALL
+               INSTALL \
+               .gitignore
 
 HEADERS += \
     updater.h \
