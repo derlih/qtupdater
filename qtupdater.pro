@@ -9,13 +9,13 @@ SOURCES += main.cpp \
     fetchers/filefetcher.cpp \
     fetchers/smartfetcher.cpp
 
-OTHER_FILES += README \
-               INSTALL \
-               .gitignore
-
 HEADERS += \
     updater.h \
     fetchers/ifetcher.h \
     fetchers/filefetcher.h \
     updaterexception.h \
     fetchers/smartfetcher.h
+
+OTHER_FILES += README \
+               INSTALL \
+               .gitignore
