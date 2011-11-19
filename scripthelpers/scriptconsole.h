@@ -11,6 +11,7 @@ public:
 
 public Q_SLOTS:
     void log(QString msg);
+    void debug(QString msg);
     void warn(QString msg);
     void critical(QString msg);
 };

@@ -19,6 +19,11 @@ void ScriptConsole::log(QString msg)
     printToConsole(QtDebugMsg, msg);
 }
 
+void ScriptConsole::debug(QString msg)
+{
+    log(msg);
+}
+
 void ScriptConsole::warn(QString msg)
 {
     printToConsole(QtWarningMsg, msg);
