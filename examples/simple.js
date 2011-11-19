@@ -2,19 +2,21 @@ function echo() {
     console.log("echo ok");
 }
 
-function fetchFile() {
+function fetchFile(path) {
     var doneCallback = function(txt) {
-        console.log(txt);
+        console.log(md5(txt));
     }
 
     var errorCallback = function(txt) {
         console.warn(txt);
     }
 
-    var f = new Fetcher(appInstallPath + "/../qtupdater/examples/simple.js");
+    var f = new Fetcher(path);
     f.done.connect(doneCallback);
     f.error.connect(errorCallback);
     f.fetch();
 }
 
-fetchFile();
+//fetchFile(appInstallPath + "/../qtupdater/examples/simple.js");
+
+fetchFile(appInstallPath + "/qtupdater");
