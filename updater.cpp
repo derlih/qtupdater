@@ -6,6 +6,7 @@
 #include <QScriptEngine>
 #include <QCoreApplication>
 #include <QTimer>
+#include <QtDebug>
 
 #if defined(USE_SCRIPT_DEBUGGER)
 #include <QScriptEngineDebugger>
@@ -16,6 +17,7 @@
 
 static void addConsoleObjectToEngine(QScriptEngine &engine);
 static void addQuitFunctionToEngine(QScriptEngine &engine);
+static void quitApplication();
 
 //===========================================================================//
 
@@ -63,6 +65,7 @@ Updater::Updater(const QUrl updateScript, const QString appInstallPath, const QS
 
     connect(&d->fetcher, SIGNAL(done(QByteArray)), this, SLOT(onScriptFetchDone(QByteArray)));
     connect(&d->fetcher, SIGNAL(error(QString)), this, SIGNAL(scriptFetchError(QString)));
+
     d->fetcher.fetch();
 }
 
@@ -80,14 +83,36 @@ void Updater::onScriptFetchDone(QByteArray data)
 //    d->debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
 #endif
 
+    // Check JS syntax
+    const QScriptSyntaxCheckResult checkResult = QScriptEngine::checkSyntax(data);
+    if(checkResult.state() == QScriptSyntaxCheckResult::Intermediate)
+    {
+        qCritical() << "Updater script contains incomplete js program\n";
+        qCritical() << data;
+    }
+    else if(checkResult.state() == QScriptSyntaxCheckResult::Error)
+    {
+        qCritical() << "Updater script contains error at line" <<
+                       checkResult.errorLineNumber() << "column" <<
+                       checkResult.errorColumnNumber() << "description" << checkResult.errorMessage();
+        qCritical() << data;
+    }
+
+    if(checkResult.state() != QScriptSyntaxCheckResult::Valid)
+    {
+        quitApplication();
+        return;
+    }
+
     // Prepare JS engine
     addConsoleObjectToEngine(d->engine);
     addQuitFunctionToEngine(d->engine);
 
+    // Run Script
     d->engine.evaluate(data);
 
     // Quit app after evaluating script
-    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
+    quitApplication();
 }
 
 //===========================================================================//
@@ -95,7 +120,7 @@ void Updater::onScriptFetchDone(QByteArray data)
 static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
 {
     Q_UNUSED(context);
-    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
+    quitApplication();
     return engine->nullValue();
 }
 
@@ -111,4 +136,9 @@ void addQuitFunctionToEngine(QScriptEngine &engine)
     QScriptValue scriptQuitFun = engine.newFunction(quitApplication);
     engine.globalObject().setProperty("quit", scriptQuitFun);
     engine.globalObject().setProperty("abort", scriptQuitFun);
+}
+
+void quitApplication()
+{
+    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
 }
