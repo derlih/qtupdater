@@ -1,5 +1,6 @@
 #include "helperfunctions.h"
 #include "scriptconsole.h"
+#include "scriptbytearray/bytearrayclass.h"
 #include "fetchers/smartfetcher.h"
 
 #include <QCoreApplication>
@@ -23,6 +24,9 @@ void prepareScriptEngine(QScriptEngine &engine)
     addFetcherTypeToEngine(engine);
     addQuitFunctionToEngine(engine);
     addHashFunctionsToEngine(engine);
+
+    ByteArrayClass *baClass = new ByteArrayClass(&engine);
+    engine.globalObject().setProperty("ByteArray", baClass->constructor());
 }
 
 static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
@@ -83,8 +87,8 @@ static QScriptValue calculateHash(QScriptContext *context, QScriptEngine *engine
         return engine->nullValue();
     }
 
-    const QByteArray &hash = QCryptographicHash::hash(context->argument(0).toString().toLatin1(),
-                                                      algorithm);
+    const QByteArray &data = qScriptValueToValue<QByteArray>(context->argument(0));
+    const QByteArray &hash = QCryptographicHash::hash(data, algorithm);
 
     QString result;
     for(int i = 0, sz = hash.size(); i < sz; ++i)
