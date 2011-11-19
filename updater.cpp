@@ -44,6 +44,13 @@ public:
         addConsoleObjectToEngine(engine);
         addFetcherTypeToEngine(engine);
         addQuitFunctionToEngine(engine);
+
+        // Add application directories to JS context
+        const QScriptValue scriptAppInstallPath = engine.newVariant(appInstallPath);
+        engine.globalObject().setProperty("appInstallPath", scriptAppInstallPath);
+
+        const QScriptValue scriptAppUserPath = engine.newVariant(appUserPath);
+        engine.globalObject().setProperty("appUserPath", scriptAppUserPath);
     }
 
     Q_DECLARE_PUBLIC(Updater)
@@ -129,7 +136,7 @@ static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engi
 void addConsoleObjectToEngine(QScriptEngine &engine)
 {
     ScriptConsole *console = new ScriptConsole(&engine);
-    QScriptValue scriptConsole = engine.newQObject(console);
+    const QScriptValue scriptConsole = engine.newQObject(console);
     engine.globalObject().setProperty("console", scriptConsole);
 }
 
@@ -147,14 +154,14 @@ static QScriptValue smartFetcherFactory(QScriptContext *context, QScriptEngine *
 
 void addFetcherTypeToEngine(QScriptEngine &engine)
 {
-    QScriptValue smartFetcherConstructor = engine.newFunction(smartFetcherFactory);
-    QScriptValue smartFetcherMetaObject = engine.newQMetaObject(&SmartFetcher::staticMetaObject, smartFetcherConstructor);
+    const QScriptValue smartFetcherConstructor = engine.newFunction(smartFetcherFactory);
+    const QScriptValue smartFetcherMetaObject = engine.newQMetaObject(&SmartFetcher::staticMetaObject, smartFetcherConstructor);
     engine.globalObject().setProperty("Fetcher", smartFetcherMetaObject);
 }
 
 void addQuitFunctionToEngine(QScriptEngine &engine)
 {
-    QScriptValue scriptQuitFun = engine.newFunction(quitApplication, 1);
+    const QScriptValue scriptQuitFun = engine.newFunction(quitApplication, 1);
     engine.globalObject().setProperty("quit", scriptQuitFun);
     engine.globalObject().setProperty("abort", scriptQuitFun);
 }

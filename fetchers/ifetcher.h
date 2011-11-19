@@ -10,6 +10,7 @@ public:
     IFetcher(QObject *parent = 0) : QObject(parent) {}
     virtual ~IFetcher() {}
 
+public Q_SLOTS:
     virtual void fetch() = 0;
 
 Q_SIGNALS:
