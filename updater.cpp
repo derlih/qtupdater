@@ -14,7 +14,8 @@
 
 //===========================================================================//
 
-static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine);
+static void addConsoleObjectToEngine(QScriptEngine &engine);
+static void addQuitFunctionToEngine(QScriptEngine &engine);
 
 //===========================================================================//
 
@@ -79,25 +80,31 @@ void Updater::onScriptFetchDone(QByteArray data)
 //    d->debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
 #endif
 
-    { // Add 'console' object to js context
-        ScriptConsole *console = new ScriptConsole(this);
-        QScriptValue scriptConsole = d->engine.newQObject(console);
-        d->engine.globalObject().setProperty("console", scriptConsole);
-    }
-
-    { // Add 'quit' function to js context
-        QScriptValue scriptQuitFun = d->engine.newFunction(quitApplication);
-        d->engine.globalObject().setProperty("quit", scriptQuitFun);
-    }
+    // Prepare JS engine
+    addConsoleObjectToEngine(d->engine);
+    addQuitFunctionToEngine(d->engine);
 
     d->engine.evaluate(data);
 }
 
 //===========================================================================//
 
-QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
+static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
 {
     Q_UNUSED(context);
     QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
     return engine->nullValue();
+}
+
+void addConsoleObjectToEngine(QScriptEngine &engine)
+{
+    ScriptConsole *console = new ScriptConsole(&engine);
+    QScriptValue scriptConsole = engine.newQObject(console);
+    engine.globalObject().setProperty("console", scriptConsole);
+}
+
+void addQuitFunctionToEngine(QScriptEngine &engine)
+{
+    QScriptValue scriptQuitFun = engine.newFunction(quitApplication);
+    engine.globalObject().setProperty("quit", scriptQuitFun);
 }
