@@ -148,8 +148,16 @@ static QScriptValue smartFetcherFactory(QScriptContext *context, QScriptEngine *
         return engine->nullValue();
     }
 
-    SmartFetcher *fetcher = new SmartFetcher(context->argument(0).toString());
-    return engine->newQObject(fetcher, QScriptEngine::ScriptOwnership);
+    try
+    {
+        SmartFetcher *fetcher = new SmartFetcher(context->argument(0).toString());
+        return engine->newQObject(fetcher, QScriptEngine::ScriptOwnership);
+    }
+    catch(std::exception &e)
+    {
+        context->throwError(QString(e.what()));
+        return engine->nullValue();
+    }
 }
 
 void addFetcherTypeToEngine(QScriptEngine &engine)
