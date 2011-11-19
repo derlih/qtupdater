@@ -16,10 +16,6 @@
 
 //===========================================================================//
 
-static void quitApplication();
-
-//===========================================================================//
-
 class UpdaterPrivate
 {
 public:
@@ -108,20 +104,10 @@ void Updater::onScriptFetchDone(QByteArray data)
 
     if(checkResult.state() != QScriptSyntaxCheckResult::Valid)
     {
-        quitApplication();
+        QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
         return;
     }
 
     // Run Script
     d->engine.evaluate(data);
-
-    // Quit app after evaluating script
-//    quitApplication();
-}
-
-//===========================================================================//
-
-void quitApplication()
-{
-    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
 }
