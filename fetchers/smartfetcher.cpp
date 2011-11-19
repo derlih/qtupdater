@@ -28,7 +28,8 @@ IFetcher* fetcherFactory(const QUrl url, QObject *parent)
     const QString urlScheme = url.scheme();
     if(urlScheme.isEmpty())
     {
-        throw InvalidSchemeException("Url scheme is empty");
+//        throw InvalidSchemeException("Url scheme is empty");
+        return new FileFetcher(QUrl::fromLocalFile(url.toString()));
     }
     else if(urlScheme == "file")
     {

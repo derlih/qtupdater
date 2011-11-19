@@ -2,7 +2,7 @@ function echo() {
     console.log("echo ok");
 }
 
-function fetchScript() {
+function fetchFile() {
     var doneCallback = function(txt) {
         console.log(txt);
     }
@@ -11,10 +11,10 @@ function fetchScript() {
         console.warn(txt);
     }
 
-    var f = new Fetcher("file:///home/mitya/Sources/qtupdater/examples/simple.js");
+    var f = new Fetcher(appInstallPath + "/../qtupdater/examples/simple.js");
     f.done.connect(doneCallback);
     f.error.connect(errorCallback);
     f.fetch();
 }
 
-fetchScript();
+fetchFile();
