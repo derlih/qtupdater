@@ -4,7 +4,7 @@ function echo() {
 
 function fetchFile(path) {
     var doneCallback = function(txt) {
-        console.log(txt);
+        console.log(txt.toLatin1String());
         quit();
     }
 
