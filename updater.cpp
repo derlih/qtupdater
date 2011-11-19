@@ -85,6 +85,9 @@ void Updater::onScriptFetchDone(QByteArray data)
     addQuitFunctionToEngine(d->engine);
 
     d->engine.evaluate(data);
+
+    // Quit app after evaluating script
+    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
 }
 
 //===========================================================================//
@@ -107,4 +110,5 @@ void addQuitFunctionToEngine(QScriptEngine &engine)
 {
     QScriptValue scriptQuitFun = engine.newFunction(quitApplication);
     engine.globalObject().setProperty("quit", scriptQuitFun);
+    engine.globalObject().setProperty("abort", scriptQuitFun);
 }
