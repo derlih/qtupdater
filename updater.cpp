@@ -95,7 +95,6 @@ void Updater::onScriptFetchDone(QByteArray data)
 
 //===========================================================================//
 
-#include <QDebug>
 QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
 {
     Q_UNUSED(context);
