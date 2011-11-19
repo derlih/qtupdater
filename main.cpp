@@ -24,7 +24,8 @@ int main(int argc, char **argv)
     try
     {
         QScopedPointer<QCoreApplication> app(
-            #if defined(QT_GUI_LIB)
+
+            #if defined(USE_SCRIPT_DEBUGGER)
                     new QApplication(argc, argv)
             #else
                     new QCoreApplication(argc, argv)

@@ -1,13 +1,20 @@
 #include "updater.h"
 #include "updaterexception.h"
 #include "fetchers/smartfetcher.h"
+#include "scripthelpers/scriptconsole.h"
 
 #include <QScriptEngine>
+#include <QCoreApplication>
+#include <QTimer>
 
-#ifdef QT_SCRIPTTOOLS_LIB
+#if defined(USE_SCRIPT_DEBUGGER)
 #include <QScriptEngineDebugger>
 #include <QAction>
 #endif
+
+//===========================================================================//
+
+static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine);
 
 //===========================================================================//
 
@@ -21,6 +28,9 @@ public:
         , appUserPath(appUserPath)
         , fetcher(updateScript)
         , engine()
+#if defined(USE_SCRIPT_DEBUGGER)
+        , debugger()
+#endif
 
     {
         if(updateScript.isEmpty())
@@ -37,7 +47,7 @@ public:
     SmartFetcher fetcher;
     QScriptEngine engine;
 
-#ifdef QT_SCRIPTTOOLS_LIB
+#if defined(USE_SCRIPT_DEBUGGER)
     QScriptEngineDebugger debugger;
 #endif
 };
@@ -64,10 +74,31 @@ void Updater::onScriptFetchDone(QByteArray data)
 {
     Q_D(Updater);
 
-#ifdef QT_SCRIPTTOOLS_LIB
+#if defined(USE_SCRIPT_DEBUGGER)
     d->debugger.attachTo(&d->engine);
-    d->debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
+//    d->debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
 #endif
 
+    { // Add 'console' object to js context
+        ScriptConsole *console = new ScriptConsole(this);
+        QScriptValue scriptConsole = d->engine.newQObject(console);
+        d->engine.globalObject().setProperty("console", scriptConsole);
+    }
+
+    { // Add 'quit' function to js context
+        QScriptValue scriptQuitFun = d->engine.newFunction(quitApplication);
+        d->engine.globalObject().setProperty("quit", scriptQuitFun);
+    }
+
     d->engine.evaluate(data);
+}
+
+//===========================================================================//
+
+#include <QDebug>
+QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)
+{
+    Q_UNUSED(context);
+    QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
+    return engine->nullValue();
 }

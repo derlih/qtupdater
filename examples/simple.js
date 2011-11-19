@@ -3,3 +3,4 @@ function foo() {
 }
 
 foo();
+quit();
