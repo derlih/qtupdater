@@ -31,3 +31,6 @@ OTHER_FILES += README \
 exists(.gitignore) {
     OTHER_FILES += .gitignore
 }
+
+
+include(scripthelpers/scriptbytearray/bytearrayclass.pri)
