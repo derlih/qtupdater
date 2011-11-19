@@ -116,7 +116,7 @@ void Updater::onScriptFetchDone(QByteArray data)
     d->engine.evaluate(data);
 
     // Quit app after evaluating script
-    quitApplication();
+//    quitApplication();
 }
 
 //===========================================================================//

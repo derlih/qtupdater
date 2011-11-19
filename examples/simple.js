@@ -4,11 +4,13 @@ function echo() {
 
 function fetchFile(path) {
     var doneCallback = function(txt) {
-        console.log(md5(txt));
+        console.log(txt);
+        quit();
     }
 
     var errorCallback = function(txt) {
         console.warn(txt);
+        quit();
     }
 
     var f = new Fetcher(path);
@@ -17,6 +19,6 @@ function fetchFile(path) {
     f.fetch();
 }
 
-//fetchFile(appInstallPath + "/../qtupdater/examples/simple.js");
+fetchFile("http://tools.ietf.org/rfc/rfc1321.txt");
 
-fetchFile(appInstallPath + "/qtupdater");
+//fetchFile(appInstallPath + "/qtupdater");

@@ -1,6 +1,7 @@
 #include "smartfetcher.h"
 #include "updaterexception.h"
 #include "filefetcher.h"
+#include "httpfetcher.h"
 
 //===========================================================================//
 
@@ -34,6 +35,10 @@ IFetcher* fetcherFactory(const QUrl url, QObject *parent)
     else if(urlScheme == "file")
     {
         return new FileFetcher(url, parent);
+    }
+    else if(urlScheme == "http" || urlScheme == "https")
+    {
+        return new HttpFetcher(url, parent);
     }
 
     throw InvalidSchemeException("Unsupported scheme");
