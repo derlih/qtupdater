@@ -16,6 +16,7 @@
 //===========================================================================//
 
 static void addConsoleObjectToEngine(QScriptEngine &engine);
+static void addFetcherTypeToEngine(QScriptEngine &engine);
 static void addQuitFunctionToEngine(QScriptEngine &engine);
 static void quitApplication();
 
@@ -38,6 +39,11 @@ public:
     {
         if(updateScript.isEmpty())
             throw UpdaterException("Update script is empty");
+
+        // Prepare JS engine
+        addConsoleObjectToEngine(engine);
+        addFetcherTypeToEngine(engine);
+        addQuitFunctionToEngine(engine);
     }
 
     Q_DECLARE_PUBLIC(Updater)
@@ -104,10 +110,6 @@ void Updater::onScriptFetchDone(QByteArray data)
         return;
     }
 
-    // Prepare JS engine
-    addConsoleObjectToEngine(d->engine);
-    addQuitFunctionToEngine(d->engine);
-
     // Run Script
     d->engine.evaluate(data);
 
@@ -131,9 +133,28 @@ void addConsoleObjectToEngine(QScriptEngine &engine)
     engine.globalObject().setProperty("console", scriptConsole);
 }
 
+static QScriptValue smartFetcherFactory(QScriptContext *context, QScriptEngine *engine)
+{
+    if(context->argumentCount() != 1)
+    {
+        context->throwError("Invalid argument count");
+        return engine->nullValue();
+    }
+
+    SmartFetcher *fetcher = new SmartFetcher(context->argument(0).toString());
+    return engine->newQObject(fetcher, QScriptEngine::ScriptOwnership);
+}
+
+void addFetcherTypeToEngine(QScriptEngine &engine)
+{
+    QScriptValue smartFetcherConstructor = engine.newFunction(smartFetcherFactory);
+    QScriptValue smartFetcherMetaObject = engine.newQMetaObject(&SmartFetcher::staticMetaObject, smartFetcherConstructor);
+    engine.globalObject().setProperty("Fetcher", smartFetcherMetaObject);
+}
+
 void addQuitFunctionToEngine(QScriptEngine &engine)
 {
-    QScriptValue scriptQuitFun = engine.newFunction(quitApplication);
+    QScriptValue scriptQuitFun = engine.newFunction(quitApplication, 1);
     engine.globalObject().setProperty("quit", scriptQuitFun);
     engine.globalObject().setProperty("abort", scriptQuitFun);
 }
