@@ -2,7 +2,12 @@
 #include "updaterexception.h"
 #include "fetchers/smartfetcher.h"
 
-#include <QLabel>
+#include <QScriptEngine>
+
+#ifdef QT_SCRIPTTOOLS_LIB
+#include <QScriptEngineDebugger>
+#include <QAction>
+#endif
 
 //===========================================================================//
 
@@ -15,6 +20,7 @@ public:
         , appInstallPath(appInstallPath)
         , appUserPath(appUserPath)
         , fetcher(updateScript)
+        , engine()
 
     {
         if(updateScript.isEmpty())
@@ -29,6 +35,11 @@ public:
     const QString appUserPath;
 
     SmartFetcher fetcher;
+    QScriptEngine engine;
+
+#ifdef QT_SCRIPTTOOLS_LIB
+    QScriptEngineDebugger debugger;
+#endif
 };
 
 //===========================================================================//
@@ -51,5 +62,12 @@ Updater::~Updater()
 
 void Updater::onScriptFetchDone(QByteArray data)
 {
-    Q_UNUSED(data);
+    Q_D(Updater);
+
+#ifdef QT_SCRIPTTOOLS_LIB
+    d->debugger.attachTo(&d->engine);
+    d->debugger.action(QScriptEngineDebugger::InterruptAction)->trigger();
+#endif
+
+    d->engine.evaluate(data);
 }

@@ -1,8 +1,8 @@
 TEMPLATE = app
-CONFIG  += qt warn_on release
-QT = core network
+CONFIG  += qt warn_on
+QT = core network script
 
-CONFIG(debug):QT += gui
+CONFIG(debug):QT += gui scripttools
 
 SOURCES += main.cpp \
     updater.cpp \
@@ -18,7 +18,7 @@ HEADERS += \
 
 OTHER_FILES += README \
                INSTALL \
-    examples/simple.js
+               examples/simple.js
 
 
 exists(.gitignore) {
