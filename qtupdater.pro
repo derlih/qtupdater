@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     updater.cpp \
     fetchers/filefetcher.cpp \
     fetchers/smartfetcher.cpp \
-    scripthelpers/scriptconsole.cpp
+    scripthelpers/scriptconsole.cpp \
+    scripthelpers/helperfunctions.cpp
 
 HEADERS += \
     updater.h \
@@ -19,7 +20,8 @@ HEADERS += \
     fetchers/filefetcher.h \
     updaterexception.h \
     fetchers/smartfetcher.h \
-    scripthelpers/scriptconsole.h
+    scripthelpers/scriptconsole.h \
+    scripthelpers/helperfunctions.h
 
 OTHER_FILES += README \
                INSTALL \
