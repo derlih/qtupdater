@@ -3,7 +3,7 @@ CONFIG  += qt warn_on
 QT = core network script
 
 CONFIG(debug, debug|release){
-    QT += gui scripttools
+    QT += widgets scripttools
     DEFINES += USE_SCRIPT_DEBUGGER
 }
 
@@ -33,6 +33,3 @@ OTHER_FILES += README \
 exists(.gitignore) {
     OTHER_FILES += .gitignore
 }
-
-
-include(scripthelpers/scriptbytearray/bytearrayclass.pri)

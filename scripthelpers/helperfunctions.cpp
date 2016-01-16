@@ -1,6 +1,5 @@
 #include "helperfunctions.h"
 #include "scriptconsole.h"
-#include "scriptbytearray/bytearrayclass.h"
 #include "fetchers/smartfetcher.h"
 
 #include <QCoreApplication>
@@ -24,9 +23,6 @@ void prepareScriptEngine(QScriptEngine &engine)
     addFetcherTypeToEngine(engine);
     addQuitFunctionToEngine(engine);
     addHashFunctionsToEngine(engine);
-
-    ByteArrayClass *baClass = new ByteArrayClass(&engine);
-    engine.globalObject().setProperty("ByteArray", baClass->constructor());
 }
 
 static QScriptValue quitApplication(QScriptContext *context, QScriptEngine *engine)

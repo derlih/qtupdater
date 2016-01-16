@@ -20,6 +20,7 @@ public:
 private Q_SLOTS:
     void onDownloadFinished();
     void onDownloadError(QNetworkReply::NetworkError code);
+    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 private:
     Q_DISABLE_COPY(HttpFetcher)

@@ -20,5 +20,6 @@ function fetchFile(path) {
 }
 
 fetchFile("http://tools.ietf.org/rfc/rfc1321.txt");
+quit();
 
 //fetchFile(appInstallPath + "/qtupdater");

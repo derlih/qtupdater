@@ -58,6 +58,7 @@ void HttpFetcher::fetch()
 
     connect(d->reply, SIGNAL(finished()), this, SLOT(onDownloadFinished()));
     connect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onDownloadError(QNetworkReply::NetworkError)));
+    connect(d->reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(onDownloadProgress(qint64,qint64)));
 }
 
 void HttpFetcher::onDownloadFinished()
@@ -133,5 +134,11 @@ void HttpFetcher::onDownloadError(QNetworkReply::NetworkError code)
         return;
     }
 
+    qWarning() << "[HTTP]" << desc;
     emit error(desc);
+}
+
+void HttpFetcher::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    qDebug() << "[HTTP]" << (100 * bytesReceived / bytesTotal) << "% downloaded";
 }
