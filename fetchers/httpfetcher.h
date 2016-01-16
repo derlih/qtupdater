@@ -1,14 +1,14 @@
 #ifndef HTTPFETCHER_H
 #define HTTPFETCHER_H
 
-#include "ifetcher.h"
+#include "fetcher.h"
 
 #include <QUrl>
 #include <QNetworkReply>
 
 class HttpFetcherPrivate;
 
-class HttpFetcher : public IFetcher
+class HttpFetcher : public Fetcher
 {
     Q_OBJECT
 public:

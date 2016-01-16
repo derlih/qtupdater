@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-class IFetcher : public QObject
+class Fetcher : public QObject
 {
     Q_OBJECT
 public:
-    IFetcher(QObject *parent = 0) : QObject(parent) {}
-    virtual ~IFetcher() {}
+    Fetcher(QObject *parent = 0) : QObject(parent) {}
+    virtual ~Fetcher() {}
 
 public Q_SLOTS:
     virtual void fetch() = 0;

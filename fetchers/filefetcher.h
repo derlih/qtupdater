@@ -1,13 +1,13 @@
 #ifndef FILEFETCHER_H
 #define FILEFETCHER_H
 
-#include "ifetcher.h"
+#include "fetcher.h"
 
 #include <QUrl>
 
 class FileFetcherPrivate;
 
-class FileFetcher : public IFetcher
+class FileFetcher : public Fetcher
 {
     Q_OBJECT
 public:

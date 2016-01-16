@@ -17,13 +17,13 @@ SOURCES += main.cpp \
 
 HEADERS += \
     updater.h \
-    fetchers/ifetcher.h \
     fetchers/filefetcher.h \
     updaterexception.h \
     fetchers/smartfetcher.h \
     scripthelpers/scriptconsole.h \
     scripthelpers/helperfunctions.h \
-    fetchers/httpfetcher.h
+    fetchers/httpfetcher.h \
+    fetchers/fetcher.h
 
 OTHER_FILES += README \
                INSTALL \

@@ -30,7 +30,7 @@ public:
 //===========================================================================//
 
 FileFetcher::FileFetcher(const QUrl url, QObject *parent)
-    : IFetcher(parent)
+    : Fetcher(parent)
     , d_ptr(new FileFetcherPrivate(this, url))
 {
 }

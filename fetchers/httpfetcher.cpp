@@ -40,7 +40,7 @@ public:
 //===========================================================================//
 
 HttpFetcher::HttpFetcher(const QUrl url, QObject *parent)
-    : IFetcher(parent)
+    : Fetcher(parent)
     , d_ptr(new HttpFetcherPrivate(this, url))
 {
 }

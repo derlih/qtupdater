@@ -5,12 +5,12 @@
 
 //===========================================================================//
 
-static IFetcher* fetcherFactory(const QUrl url, QObject *parent);
+static Fetcher* fetcherFactory(const QUrl url, QObject *parent);
 
 //===========================================================================//
 
 SmartFetcher::SmartFetcher(const QUrl url, QObject *parent)
-    : IFetcher(parent)
+    : Fetcher(parent)
     , mFetcher(fetcherFactory(url, this))
 {
     connect(mFetcher, SIGNAL(done(QByteArray)), this, SIGNAL(done(QByteArray)));
@@ -24,7 +24,7 @@ void SmartFetcher::fetch()
 
 //===========================================================================//
 
-IFetcher* fetcherFactory(const QUrl url, QObject *parent)
+Fetcher* fetcherFactory(const QUrl url, QObject *parent)
 {
     const QString urlScheme = url.scheme();
     if(urlScheme.isEmpty())

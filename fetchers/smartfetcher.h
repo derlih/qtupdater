@@ -1,11 +1,11 @@
 #ifndef SMARTFETCHER_H
 #define SMARTFETCHER_H
 
-#include "ifetcher.h"
+#include "fetcher.h"
 
 #include <QUrl>
 
-class SmartFetcher : public IFetcher
+class SmartFetcher : public Fetcher
 {
     Q_OBJECT
 public:
@@ -14,7 +14,7 @@ public:
     void fetch();
 
 private:
-    IFetcher *mFetcher;
+    Fetcher *mFetcher;
 };
 
 #endif // SMARTFETCHER_H
