@@ -4,7 +4,7 @@ CONFIG += testcase
 SOURCES += main.cpp
 
 # Google test
-#TODO: Remove default path
-GTESTS_SRC_ROOT = /usr/src/gtest/
-INCLUDEPATH += $${GTESTS_ROOT}
+GTESTS_ROOT = $${PWD}/googletest/googletest
+INCLUDEPATH += $${GTESTS_ROOT} \
+               $${GTESTS_ROOT}/include
 SOURCES += $${GTESTS_ROOT}/src/gtest-all.cc
