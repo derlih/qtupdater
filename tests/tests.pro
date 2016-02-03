@@ -1,7 +1,14 @@
 TEMPLATE = app
 CONFIG += testcase
 
-SOURCES += main.cpp
+include(../settings.pri)
+
+PRE_TARGETDEPS = ../src/libqtupdater.so
+LIBS += -L../src -lqtupdater
+
+
+SOURCES += main.cpp \
+           test_http_fetched.cpp
 
 # Google test
 GTESTS_ROOT = $${PWD}/googletest/googletest
