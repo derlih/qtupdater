@@ -10,10 +10,3 @@ CONFIG(debug, debug|release){
 SOURCES += main.cpp
 
 #HEADERS += \
-
-OTHER_FILES += README \
-               INSTALL
-
-exists(.gitignore) {
-    OTHER_FILES += .gitignore
-}
