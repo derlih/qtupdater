@@ -7,28 +7,12 @@ CONFIG(debug, debug|release){
     DEFINES += USE_SCRIPT_DEBUGGER
 }
 
-SOURCES += main.cpp \
-    updater.cpp \
-    fetchers/filefetcher.cpp \
-    fetchers/smartfetcher.cpp \
-    scripthelpers/scriptconsole.cpp \
-    scripthelpers/helperfunctions.cpp \
-    fetchers/httpfetcher.cpp
+SOURCES += main.cpp
 
-HEADERS += \
-    updater.h \
-    fetchers/filefetcher.h \
-    updaterexception.h \
-    fetchers/smartfetcher.h \
-    scripthelpers/scriptconsole.h \
-    scripthelpers/helperfunctions.h \
-    fetchers/httpfetcher.h \
-    fetchers/fetcher.h
+#HEADERS += \
 
 OTHER_FILES += README \
-               INSTALL \
-               examples/simple.js
-
+               INSTALL
 
 exists(.gitignore) {
     OTHER_FILES += .gitignore
